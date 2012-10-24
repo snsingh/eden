@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-
+import sys
+import tweepy
+import webbrowser
 """
     Messaging Module - Controllers
 """
@@ -196,7 +198,9 @@ def twitter_search_results():
 
         @ToDo: Action Button to update async
     """
-
+    """ RESTful CRUD controller """
+    our_function()
+    
     def prep(r):
         if r.interactive:
             table = r.table
@@ -215,6 +219,56 @@ def twitter_search_results():
                    editable=False)
     return s3_rest_controller()
 
+def our_function() :
+    print "Welcome to Social Media!"
+
+
+
+## search
+#
+#    ltable2 = s3db.msg_twitter_search
+#    query = (ltable2.deleted == False) & \
+#    		(ltable2.id==1) 
+#    		
+#    keyword=db(query).select(ltable2.search_query,cache=cache)
+#    
+#   
+#    print "search keyword is :"
+#    print keyword
+    
+    search_terms = "flood"
+    print search_terms
+    rpp=1000
+    result_list = tweepy.api.search(search_terms, rpp=rpp, lang='en')
+
+    for c in result_list :
+        if c.geo :
+          print c.text
+          str_arr = str(c.geo).split("[")
+          str_arr1 = str_arr[1].split(",")
+          str_arr2 = str_arr1[1].split("]")
+          lat = str_arr1[0]
+          lon =str_arr2[0]
+          print c.text
+          print lat
+          print lon
+     	  
+          ltable = s3db.gis_location
+    	  location_id = ltable.insert(lat = float(lat),lon = float(lon))
+    
+     	  ltable1 = s3db.msg_twitter_search_results
+    	  tweet_id = ltable1.insert(location_id=location_id, tweet=c.text)
+
+     	  print "Lat:"
+     	  print lat
+     	  print "lon:"
+     	  print lon
+     	  print "Location id:"
+       	  print location_id
+          print "tweet"
+          print c.text
+
+    return 
 # =============================================================================
 @auth.s3_requires_membership(1)
 def setting():
