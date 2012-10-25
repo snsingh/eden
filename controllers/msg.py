@@ -199,7 +199,7 @@ def twitter_search_results():
         @ToDo: Action Button to update async
     """
     """ RESTful CRUD controller """
-    our_function()
+    twitter_feed_plotter()
     
     def prep(r):
         if r.interactive:
@@ -219,7 +219,7 @@ def twitter_search_results():
                    editable=False)
     return s3_rest_controller()
 
-def our_function() :
+def twitter_feed_plotter() :
     print "Welcome to Social Media!"
 
 
@@ -236,7 +236,7 @@ def our_function() :
 #    print "search keyword is :"
 #    print keyword
     
-    search_terms = "flood"
+    search_terms = "earthquake"
     print search_terms
     rpp=1000
     result_list = tweepy.api.search(search_terms, rpp=rpp, lang='en')
