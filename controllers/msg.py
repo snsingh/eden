@@ -199,7 +199,7 @@ def twitter_search_results():
         @ToDo: Action Button to update async
     """
     """ RESTful CRUD controller """
-    twitter_feed_plotter()
+    twitter_feed_plotter()   #Plots the twitter feed on the map
     
     def prep(r):
         if r.interactive:
@@ -236,37 +236,38 @@ def twitter_feed_plotter() :
 #    print "search keyword is :"
 #    print keyword
     
-    search_terms = "earthquake"
+    search_terms = "hurricane"      
     print search_terms
     rpp=1000
-    result_list = tweepy.api.search(search_terms, rpp=rpp, lang='en')
+    result_list = tweepy.api.search(search_terms, rpp=rpp, lang='en')  # Uses the tweepy APi to search for live Twitter Feeds and then 
+                                                                       #   passes it in the resukt_list
 
-    for c in result_list :
-        if c.geo :
-          print c.text
-          str_arr = str(c.geo).split("[")
+    for every_tweet in result_list :                        #Parses the twitter feed to get the location from where the tweet has originated
+        if every_tweet.geo :
+          print every_tweet.text
+          str_arr = str(every_tweet.geo).split("[")
           str_arr1 = str_arr[1].split(",")
           str_arr2 = str_arr1[1].split("]")
-          lat = str_arr1[0]
-          lon =str_arr2[0]
-          print c.text
-          print lat
-          print lon
+          latitude = str_arr1[0]
+          longitude =str_arr2[0]
+          print every_tweet.text
+          print latitude
+          print longitude
      	  
           ltable = s3db.gis_location
-    	  location_id = ltable.insert(lat = float(lat),lon = float(lon))
+    	  location_id = ltable.insert(lat = float(latitude),lon = float(longitude))
     
-     	  ltable1 = s3db.msg_twitter_search_results
-    	  tweet_id = ltable1.insert(location_id=location_id, tweet=c.text)
+     	  ltable_tweet_search_result_table = s3db.msg_twitter_search_results
+    	  tweet_id = ltable_tweet_search_result_table.insert(location_id=location_id, tweet=every_tweet.text)
 
      	  print "Lat:"
-     	  print lat
+     	  print latitude
      	  print "lon:"
-     	  print lon
+     	  print longitude
      	  print "Location id:"
        	  print location_id
           print "tweet"
-          print c.text
+          print every_tweet.text
 
     return 
 # =============================================================================
